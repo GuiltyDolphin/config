@@ -260,6 +260,14 @@ function! MyHover()
   call CocAction("doHover")
 endfunction
 
+function! MyHasHoverSafe()
+  try
+    return len(CocAction('getHover')) !=# 0
+  catch /Error on "getHover" request/
+    return 0
+  endtry
+endfunction
+
 " Hover, but don't replace any active floats and don't print a message if no
 " hover is found. Useful for e.g., CursorHold where warning about no hover
 " information may get noisy.
@@ -271,7 +279,7 @@ function! MyHoverNoOverride()
   " Don't override existing floats
   if !coc#float#has_float()
     " Check if there's any hover information available
-    if len(CocAction('getHover')) !=# 0
+    if MyHasHoverSafe()
       call CocAction('doHover')
     endif
   endif
